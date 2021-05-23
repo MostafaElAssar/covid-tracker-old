@@ -47,6 +47,14 @@ const Dsshboard: React.FC<DsshboardProps> = ({
     setCountry(countries.find((c) => c.country === value));
   };
 
+  const percentileRank =
+    country &&
+    Math.round(
+      (countries.filter((c) => c.active <= country.active).length /
+        countries.length) *
+        100
+    );
+
   return (
     <div className={className}>
       <AutoComplete
@@ -72,6 +80,10 @@ const Dsshboard: React.FC<DsshboardProps> = ({
           <p>New recovered: {country.todayRecovered}</p>
           <p>Active cases: {country.active}</p>
           <p>Population: {country.population}</p>
+          <h2>
+            {percentileRank}% of the world countries have active cases less than
+            or equal to {country.country}.
+          </h2>
         </Card>
       )}
     </div>
