@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Input, AutoComplete } from 'antd';
 import styled from 'styled-components';
+import { SearchOutlined } from '@ant-design/icons';
 import { Country } from '../../services/countriesService';
 import style from './Dashboard.style';
 
@@ -53,7 +54,12 @@ const Dsshboard: React.FC<DsshboardProps> = ({
         onSelect={handleSelect}
         onSearch={handleSearch}
       >
-        <Input.Search size="large" enterButton />
+        <Input.Search
+          prefix={<SearchOutlined />}
+          size="large"
+          allowClear
+          enterButton="Search"
+        />
       </AutoComplete>
 
       {country && (
