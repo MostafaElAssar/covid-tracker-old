@@ -14,7 +14,7 @@
 
 ## Steps for running locally:
 
-https://angry-swanson-a0201d.netlify.app/dashboard
+https://angry-swanson-a0201d.netlify.app/
 
 ## Run app locally on your machine
 
