@@ -1,7 +1,7 @@
-import React from 'react';
-import { Col, Layout, Row } from 'antd';
-import styled from 'styled-components';
-import style from './Footer.style';
+import React from "react";
+import { Col, Layout, Row } from "antd";
+import styled from "styled-components";
+import style from "./Footer.style";
 
 interface FooterProps {
   className?: string;
@@ -12,7 +12,7 @@ const Footer: React.FC<FooterProps> = ({ className }: FooterProps) => (
     <Row>
       <Col>
         <span>Version: 1.1.0</span> <br />
-        <a href="support@mytigate.com">support@mytigate.com</a> <br />
+        <a href="mailto:support@mytigate.com">support@mytigate.com</a> <br />
         <a href="https://mytigate.de/">Technical Documentation</a> <br />
       </Col>
       <Col offset={6}>
