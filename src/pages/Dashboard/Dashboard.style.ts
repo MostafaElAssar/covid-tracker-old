@@ -2,13 +2,11 @@ import { css } from "styled-components";
 
 export default css`
   padding: 24px;
-  .ant-select-auto-complete {
+  .ant-input-group-wrapper {
     width: 80%;
+    margin-bottom: 24px;
     .ant-input-group-addon {
       display: none;
     }
-  }
-  .ant-card {
-    margin-top: 24px;
   }
 `;

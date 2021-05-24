@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Input, AutoComplete } from "antd";
+import { Input, Table } from "antd";
 import styled from "styled-components";
 import { SearchOutlined } from "@ant-design/icons";
 import { Country } from "../../services/countriesService";
@@ -13,15 +13,85 @@ interface DsshboardProps {
   onLoadCountriesStats: () => void;
 }
 
+const columns = [
+  {
+    title: "Name",
+    width: 50,
+    dataIndex: "country",
+    key: "country",
+  },
+  {
+    title: "Total cases",
+    width: 50,
+    dataIndex: "cases",
+    key: "cases",
+  },
+  {
+    title: "New cases",
+    dataIndex: "todayCases",
+    key: "todayCases",
+    width: 50,
+  },
+  {
+    title: "Total deaths",
+    width: 50,
+    dataIndex: "deaths",
+    key: "deaths",
+  },
+  {
+    title: "New deaths",
+    dataIndex: "todayDeaths",
+    key: "todayDeaths",
+    width: 50,
+  },
+  {
+    title: "Total recovered",
+    width: 50,
+    dataIndex: "recovered",
+    key: "recovered",
+  },
+  {
+    title: "New recovered",
+    dataIndex: "todayRecovered",
+    key: "todayRecovered",
+    width: 50,
+  },
+  {
+    title: "Active cases",
+    dataIndex: "active",
+    key: "6",
+    width: 50,
+  },
+  {
+    title: "Population",
+    dataIndex: "population",
+    key: "population",
+    width: 50,
+  },
+  {
+    title: "Population",
+    dataIndex: "population",
+    key: "population",
+    width: 50,
+  },
+  {
+    title: "Percentile Rank",
+    dataIndex: "percentile",
+    key: "percentile",
+    width: 50,
+  },
+  {
+    title: "Safe <50",
+    dataIndex: "safe",
+    key: "percentile",
+    width: 50,
+  },
+];
+
 const searchCountries = (query: string, countries: ReadonlyArray<Country>) => {
-  return countries
-    .filter((c) => c.country.toLowerCase().includes(query.toLowerCase()))
-    .map((el) => {
-      return {
-        value: el.country,
-        label: el.country,
-      };
-    });
+  return countries.filter((c) =>
+    c.country.toLowerCase().includes(query.toLowerCase())
+  );
 };
 
 const Dsshboard: React.FC<DsshboardProps> = ({
@@ -29,68 +99,53 @@ const Dsshboard: React.FC<DsshboardProps> = ({
   countries,
   className,
 }: DsshboardProps) => {
+  const [filtered, setFiltered] = useState<ReadonlyArray<Country>>([]);
+
   useEffect(() => {
     onLoadCountriesStats();
   }, [onLoadCountriesStats]);
 
-  const [options, setOptions] = useState<
-    Array<{ value: string; label: string }>
-  >([]);
-
-  const [country, setCountry] = useState<Country>();
+  useEffect(() => {
+    setFiltered(countries);
+  }, [countries]);
 
   const handleSearch = (value: string) => {
     if (value.length > 0) {
-      setOptions(searchCountries(value, countries));
+      setFiltered(searchCountries(value, countries));
       return;
     }
-    setOptions([]);
-    setCountry(undefined);
+    setFiltered(countries);
   };
-
-  const handleSelect = (value: string) => {
-    setCountry(countries.find((c) => c.country === value));
-  };
-
-  const percentileRank =
-    country &&
-    Math.round(
-      (countries.filter((c) => c.active <= country.active).length /
-        countries.length) *
-        100
-    );
 
   return (
     <div className={className}>
-      <AutoComplete
-        options={options}
-        onSelect={handleSelect}
+      <Input.Search
+        prefix={<SearchOutlined />}
+        size="large"
+        allowClear
+        enterButton="Search"
         onSearch={handleSearch}
-      >
-        <Input.Search
-          prefix={<SearchOutlined />}
-          size="large"
-          allowClear
-          enterButton="Search"
-        />
-      </AutoComplete>
+        onChange={(e) => handleSearch(e.target.value)}
+      />
 
-      {country && (
-        <Card title={country.country}>
-          <p>Total cases: {country.cases}</p>
-          <p>New cases: {country.todayCases}</p>
-          <p>Total deaths: {country.deaths}</p>
-          <p>New deaths: {country.todayDeaths}</p>
-          <p>Total recovered: {country.recovered}</p>
-          <p>New recovered: {country.todayRecovered}</p>
-          <p>Active cases: {country.active}</p>
-          <p>Population: {country.population}</p>
-          <h2>
-            {percentileRank}% of the world countries have active cases less than
-            or equal to {country.country}.
-          </h2>
-        </Card>
-      )}
+      <Table
+        columns={columns}
+        dataSource={filtered.map((el) => {
+          const percentile = Math.round(
+            (countries.filter((c) => c.active <= el.active).length /
+              countries.length) *
+              100
+          );
+          return {
+            ...el,
+            percentile,
+            safe: percentile < 50 ? "true" : "false",
+          };
+        })}
+        pagination={false}
+        bordered
+        scroll={{ x: 1400, y: 450 }}
+      />
     </div>
   );
 };
