@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Input, AutoComplete } from 'antd';
-import styled from 'styled-components';
-import { SearchOutlined } from '@ant-design/icons';
-import { Country } from '../../services/countriesService';
-import style from './Dashboard.style';
+import React, { useEffect, useState } from "react";
+import { Card, Input, AutoComplete } from "antd";
+import styled from "styled-components";
+import { SearchOutlined } from "@ant-design/icons";
+import { Country } from "../../services/countriesService";
+import style from "./Dashboard.style";
 
 interface DsshboardProps {
   className?: string;
@@ -40,7 +40,12 @@ const Dsshboard: React.FC<DsshboardProps> = ({
   const [country, setCountry] = useState<Country>();
 
   const handleSearch = (value: string) => {
-    setOptions(value ? searchCountries(value, countries) : []);
+    if (value.length > 0) {
+      setOptions(searchCountries(value, countries));
+      return;
+    }
+    setOptions([]);
+    setCountry(undefined);
   };
 
   const handleSelect = (value: string) => {
